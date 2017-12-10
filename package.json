@@ -1,24 +1,36 @@
 {
-  "name": "not-locale",
-  "version": "0.0.1",
-  "description": "not-* family module for localization in not- environment",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/interrupter/not-locale.git"
-  },
-  "keywords": [
-    "not-framework",
-    "not-node",
-    "locale"
-  ],
-  "author": "interrupter <alex.repin@mail.ru> (http://github.com/interrupter)",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/interrupter/not-locale/issues"
-  },
-  "homepage": "https://github.com/interrupter/not-locale#readme"
+    "name": "not-locale",
+    "version": "0.0.2",
+    "description": "not-* family module for localization in not- environment",
+    "main": "index.js",
+    "scripts": {
+        "test": "./node_modules/.bin/mocha --reporter spec",
+        "lint": "./node_modules/.bin/eslint ./src/**/**",
+        "cover": "istanbul cover _mocha $(find ./test -name \"*.js\" -not -path \"./node_modules/*\")"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/interrupter/not-locale.git"
+    },
+    "keywords": [
+        "not-framework",
+        "not-node",
+        "locale"
+    ],
+    "author": "interrupter <alex.repin@mail.ru> (http://github.com/interrupter)",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/interrupter/not-locale/issues"
+    },
+    "homepage": "https://github.com/interrupter/not-locale#readme",
+    "dependencies": {
+        "load-json-file": "^4.0.0"
+    },
+    "devDependencies": {
+        "chai": "*",
+        "chai-as-promised": "*",
+        "eslint": "*",
+        "istanbul": "*",
+        "mocha": "*"
+    }
 }
