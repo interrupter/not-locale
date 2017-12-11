@@ -1,4 +1,4 @@
 {
-    "login": "логин",
-    "password": "пароль"
+    "login": "логин {0}",
+    "password": "пароль {none}"
 }

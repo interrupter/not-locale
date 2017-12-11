@@ -86,6 +86,24 @@ describe("say", function() {
 		expect(locale.say('like')).to.throw;
 		locale.change('en');
 	});
+
+	it("phrase with param and params as Array", function() {
+		locale.change('ru');
+		expect(locale.say('login', ['param zero'])).to.be.equal('логин param zero');
+		locale.change('en');
+	});
+
+	it("phrase with param and params as Object", function() {
+		locale.change('ru');
+		expect(locale.say('password', {none: 'param zero'})).to.be.equal('пароль param zero');
+		locale.change('en');
+	});
+
+	it("phrase with param and params as null", function() {
+		locale.change('ru');
+		expect(locale.say('password', null)).to.be.equal('пароль {none}');
+		locale.change('en');
+	});
 });
 
 describe("middleware", function() {

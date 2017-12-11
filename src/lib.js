@@ -1,9 +1,11 @@
 /**
- * this is MyClass.
+ * Fat and dirty solutions for common locale determination and response adjustments
+ * @module not-locale/lib
  */
 
 const loadJsonFile = require('load-json-file'),
 	fs = require('fs'),
+	format = require('string-format'),
 	path = require('path');
 
 var store = {},
@@ -14,12 +16,12 @@ var store = {},
 	CURRENT = 'ru';
 
 	/**
-      * @param {number} a - this is a value.
-      * @param {number} b - this is a value.
-      * @return {number} result of the sum value.
-      */
+	* Express middleware, to determine in which locale should we process response
+	* @param {object} options - object with `deafult` {string}, `getter` {function} redefined
+	* @return {function} function wich will accept three params (req, res, next) and run as express middleware
+	*/
 
-let middleware = (options)=>{
+exports.middleware = (options)=>{
 	if (options){
 		if (options.default && options.default.length > 1){
 			OPTS.default = options.default;
@@ -45,11 +47,11 @@ let middleware = (options)=>{
 	return detect;
 };
 
-exports.middleware = middleware;
+
 /**
-  * @param {number} a - this is a value.
-  * @param {number} b - this is a value.
-  * @return {number} result of the sum value.
+  * Add locale by json object
+  * @param {string} locale - name of locale
+  * @param {json} json - json object
   */
 exports.fromJSON = (locale, json)=>{
 	if (typeof store[locale] !== 'undefined'){
@@ -58,10 +60,11 @@ exports.fromJSON = (locale, json)=>{
 		store[locale] = Object.assign({}, json);
 	}
 };
+
 /**
-  * @param {number} a - this is a value.
-  * @param {number} b - this is a value.
-  * @return {number} result of the sum value.
+  * Load locales from directory, with json files, names as [locale_name].json
+  * @param {number} pathToLocales - absolute path to directory
+  * @return {Promise}
   */
 exports.fromDir = (pathToLocales)=>{
 	return new Promise((resolve, reject)=>{
@@ -89,41 +92,53 @@ exports.fromDir = (pathToLocales)=>{
 		});
 	});
 };
-/**
-  * @param {number} a - this is a value.
-  * @param {number} b - this is a value.
-  * @return {number} result of the sum value.
-  */
 
-exports.say = (phrase) => {
+/**
+  * Returns localized variant of code phrase
+  * @param {string} phrase - code phrase
+  * @param {array|object} params - array or hash with params for template parser
+  * @return {string} localized variant
+  */
+exports.say = (phrase, params = []) => {
 	try{
-		return store[CURRENT][phrase];
+		let tmpl = store[CURRENT][phrase],
+			result= '';
+		if (params){
+			if(Array.isArray(params)){
+				result = format(tmpl, ...params);
+			}else{
+				result = format(tmpl, params);
+			}
+		}else{
+			result = tmpl;
+		}
+		return result;
 	}catch(e){
 		//!TODO replace on not-error/not-error-report
 		//console.error(e);
 	}
 };
+
 /**
-  * @param {number} a - this is a value.
-  * @param {number} b - this is a value.
-  * @return {number} result of the sum value.
+  * Getter for stores of all locales
+  * @return {objects} all locales
   */
 exports.vocabulary = () => {return store;};
+
 /**
-  * @param {number} a - this is a value.
-  * @param {number} b - this is a value.
-  * @return {number} result of the sum value.
+  * Getter for CURRENT locale
+  * @return {string} current locale name
   */
 exports.current = () => {return CURRENT;};
+
 /**
-  * @param {number} a - this is a value.
-  * @param {number} b - this is a value.
-  * @return {number} result of the sum value.
+  * Changes CURRENT locale
+  * @param {string} locale - locale name
   */
 exports.change = (locale) => { CURRENT = locale;};
+
 /**
-  * @param {number} a - this is a value.
-  * @param {number} b - this is a value.
-  * @return {number} result of the sum value.
+  * Getter for OPTS variable
+  * @return {object} copy of OPTS object
   */
 exports.OPTS = () => { return Object.assign({}, OPTS);};
