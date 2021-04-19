@@ -62,15 +62,8 @@ describe("fromDir", function() {
 });
 
 
-describe("change", function() {
-	it("change from current(ru) to en", function() {
-		locale.change('en');
-		expect(locale.current()).to.be.equal('en');
-	});
-});
-
 describe("say", function() {
-	it("say login in current(en) locale", function() {
+	it("say login in default(en) locale", function() {
 		expect(locale.say('login')).to.be.equal('login');
 	});
 	it("say login in default(en) password", function() {
@@ -82,27 +75,19 @@ describe("say", function() {
 	});
 
 	it("locale not exists, should throw", function() {
-		locale.change('po');
-		expect(locale.say('like')).to.throw;
-		locale.change('en');
+		expect(locale.say('like', undefined, 'po')).to.throw;
 	});
 
 	it("phrase with param and params as Array", function() {
-		locale.change('ru');
-		expect(locale.say('login', ['param zero'])).to.be.equal('логин param zero');
-		locale.change('en');
+		expect(locale.say('login', ['param zero'], 'ru')).to.be.equal('логин param zero');
 	});
 
 	it("phrase with param and params as Object", function() {
-		locale.change('ru');
-		expect(locale.say('password', {none: 'param zero'})).to.be.equal('пароль param zero');
-		locale.change('en');
+		expect(locale.say('password', {none: 'param zero'}, 'ru')).to.be.equal('пароль param zero');
 	});
 
 	it("phrase with param and params as null", function() {
-		locale.change('ru');
-		expect(locale.say('password', null)).to.be.equal('пароль {none}');
-		locale.change('en');
+		expect(locale.say('password', null, 'ru')).to.be.equal('пароль {none}');
 	});
 });
 
@@ -116,9 +101,9 @@ describe("middleware", function() {
 			get(){
 				return 'ga';
 			}
-		};
-		locale.middleware()(reqMock, false, ()=>{
-			expect(locale.current()).to.be.equal('ga');
+		},resMock = {locals:{}};
+		locale.middleware()(reqMock, resMock, ()=>{
+			expect(resMock.locals.locale).to.be.equal('ga');
 		});
 	});
 
@@ -137,9 +122,9 @@ describe("middleware", function() {
 			get(){
 				return 'it';
 			}
-		};
-		locale.middleware()(reqMock, false, ()=>{
-			expect(locale.current()).to.be.equal(locale.OPTS().default);
+		},resMock = {locals:{}};
+		locale.middleware()(reqMock, resMock, ()=>{
+			expect(resMock.locals.locale).to.be.equal(locale.OPTS().default);
 		});
 	});
 
@@ -147,9 +132,9 @@ describe("middleware", function() {
 		let middleware = locale.middleware({
 			getter:(req)=>{
 				return req.user.lang;
-			}});
-		middleware({user:{lang:'custom'}}, false, ()=>{
-			expect(locale.current()).to.be.equal('custom');
+			}}),resMock = {locals:{}};
+		middleware({user:{lang:'custom'}}, resMock, ()=>{
+			expect(resMock.locals.locale).to.be.equal('custom');
 		});
 	});
 });

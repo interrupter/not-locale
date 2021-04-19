@@ -12,11 +12,29 @@ var store = {},
 	OPTS = {
 		default: 'en',
 		getter: null
-	},
-	CURRENT = 'ru';
+	};
 
 	/**
 	* Express middleware, to determine in which locale should we process response
+	*/
+
+	function detect( req, res, next ){
+		let reqLang;
+		if (OPTS.getter){
+			reqLang = OPTS.getter(req);
+		}else{
+			reqLang = req.get('Accept-Language');
+		}
+		if (store.hasOwnProperty(reqLang)){
+			res.locals.locale = reqLang;
+		}else{
+			res.locals.locale = OPTS.default;
+		}
+		next();
+	}
+
+	/**
+	* Express middleware initializer, to determine in which locale should we process response
 	* @param {object} options - object with `deafult` {string}, `getter` {function} redefined
 	* @return {function} function wich will accept three params (req, res, next) and run as express middleware
 	*/
@@ -30,20 +48,6 @@ exports.middleware = (options)=>{
 			OPTS.getter = options.getter;
 		}
 	}
-	let detect = ( req, res, next ) => {
-		let reqLang;
-		if (OPTS.getter){
-			reqLang = OPTS.getter(req);
-		}else{
-			reqLang = req.get('Accept-Language');
-		}
-		if (store.hasOwnProperty(reqLang)){
-			CURRENT = reqLang;
-		}else{
-			CURRENT = OPTS.default;
-		}
-		next();
-	};
 	return detect;
 };
 
@@ -99,9 +103,9 @@ exports.fromDir = (pathToLocales)=>{
   * @param {array|object} params - array or hash with params for template parser
   * @return {string} localized variant
   */
-exports.say = (phrase, params = []) => {
+exports.say = (phrase, params = [], locale = OPTS.default) => {
 	try{
-		let tmpl = store[CURRENT][phrase],
+		let tmpl = store[locale][phrase],
 			result= '';
 		if (params){
 			if(Array.isArray(params)){
@@ -124,18 +128,6 @@ exports.say = (phrase, params = []) => {
   * @return {objects} all locales
   */
 exports.vocabulary = () => {return store;};
-
-/**
-  * Getter for CURRENT locale
-  * @return {string} current locale name
-  */
-exports.current = () => {return CURRENT;};
-
-/**
-  * Changes CURRENT locale
-  * @param {string} locale - locale name
-  */
-exports.change = (locale) => { CURRENT = locale;};
 
 /**
   * Getter for OPTS variable

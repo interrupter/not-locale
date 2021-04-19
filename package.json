@@ -1,20 +1,19 @@
 {
 	"name": "not-locale",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"description": "not-* family module for localization in not- environment",
 	"main": "index.js",
 	"scripts": {
 		"test": "./node_modules/.bin/mocha --reporter spec",
 		"lint": "./node_modules/.bin/eslint ./src/**/**",
 		"docs": "./node_modules/.bin/jsdoc -c jsdoc.json",
-		"cover": "istanbul cover _mocha $(find ./test -name \"*.js\" -not -path \"./node_modules/*\")"
+		"cover": "nyc npm run test"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/interrupter/not-locale.git"
 	},
 	"keywords": [
-		"not-framework",
 		"not-node",
 		"locale"
 	],
@@ -33,8 +32,8 @@
 		"chai-as-promised": "*",
 		"eslint": "*",
 		"ink-docstrap": "^1.3.2",
-		"istanbul": "*",
-		"jsdoc": "^3.6.4",
-		"mocha": "*"
+		"jsdoc": "^3.6.6",
+		"mocha": "*",
+		"nyc": "*"
 	}
 }
