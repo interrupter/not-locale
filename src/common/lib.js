@@ -5,7 +5,7 @@
 
 const loadJsonFile = require('load-json-file'),
 	fs = require('fs'),
-	format = require('string-format'),
+	notPath = require('not-path'),
 	path = require('path');
 
 var store = {},
@@ -103,16 +103,12 @@ exports.fromDir = (pathToLocales)=>{
   * @param {array|object} params - array or hash with params for template parser
   * @return {string} localized variant
   */
-exports.say = (phrase, params = [], locale = OPTS.default) => {
+exports.say = (phrase, params = {}, locale = OPTS.default) => {
 	try{
 		let tmpl = store[locale][phrase],
-			result= '';
+			result = '';
 		if (params){
-			if(Array.isArray(params)){
-				result = format(tmpl, ...params);
-			}else{
-				result = format(tmpl, params);
-			}
+			return notPath.get(str, params, {});
 		}else{
 			result = tmpl;
 		}
@@ -134,3 +130,17 @@ exports.vocabulary = () => {return store;};
   * @return {object} copy of OPTS object
   */
 exports.OPTS = () => { return Object.assign({}, OPTS);};
+
+
+exports.get = (locale)=>{
+	if(Object.prototype.hasOwnProperty.call(store, locale)){
+		return store[locale];
+	}else{
+		return {};
+	}
+};
+
+
+exports.available = ()=>{
+	return Object.keys(store);
+};
