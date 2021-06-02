@@ -30,7 +30,7 @@ class nsLocale{
   * Retrieves dictionary for current locale
   * sets dictionary in notLocale object
   */
-  update(){
+  async update(){
     try{
       let dict = await this.interface.$get({locale: this.getCurrentLocale()});
       if(dict){
@@ -52,7 +52,7 @@ class nsLocale{
   * @returns {Promise<Array>}   of locales objects {code, title}
   **/
   getAvailable(){
-    return await this.interface.$available({});
+    return this.interface.$available({});
   }
 
 }

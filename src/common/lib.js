@@ -25,7 +25,7 @@ var store = {},
 		}else{
 			reqLang = req.get('Accept-Language');
 		}
-		if (store.hasOwnProperty(reqLang)){
+		if (Object.prototype.hasOwnProperty.call(store, reqLang)){
 			res.locals.locale = reqLang;
 		}else{
 			res.locals.locale = OPTS.default;
@@ -108,7 +108,7 @@ exports.say = (phrase, params = {}, locale = OPTS.default) => {
 		let tmpl = store[locale][phrase],
 			result = '';
 		if (params){
-			return notPath.get(str, params, {});
+			return notPath.get(tmpl, params, {});
 		}else{
 			result = tmpl;
 		}

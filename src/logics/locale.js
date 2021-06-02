@@ -37,7 +37,7 @@ class LocaleLogic {
 
 	static async available() {
 		try{
-			let result = notLocale.available(locale);
+			let result = notLocale.available();
 			return {
 				status: 'ok',
 				result

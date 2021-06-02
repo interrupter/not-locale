@@ -4,13 +4,10 @@
 **/
 
 import EventEmitter from 'wolfy87-eventemitter';
-import {
-  writable
-} from 'svelte/store';
 
 import {notCommon, notPath} from 'not-bulma';
 
-const store = writable({});
+import LOCALE from './store';
 
 class notLocale extends EventEmitter{
   constructor(){
@@ -68,7 +65,7 @@ class notLocale extends EventEmitter{
   * @param {object}     dict      vocabulary of phrases and templates
   **/
   set(dict){
-    store.$set(dict);
+    LOCALE.$set(dict);
     this.dict = Object.assign({}, {...dict});
     this.emit('change');
   }
@@ -78,7 +75,7 @@ class notLocale extends EventEmitter{
   * @return {object}  writable store
   */
   vocabulary(){
-    return store;
+    return LOCALE;
   }
 }
 
