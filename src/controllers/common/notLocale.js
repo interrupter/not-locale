@@ -65,7 +65,7 @@ class notLocale extends EventEmitter{
   * @param {object}     dict      vocabulary of phrases and templates
   **/
   set(dict){
-    LOCALE.$set(dict);
+    LOCALE.set(dict);
     this.dict = Object.assign({}, {...dict});
     this.emit('change');
   }

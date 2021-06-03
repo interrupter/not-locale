@@ -10,20 +10,14 @@ import notLocale from './notLocale.js';
 class nsLocale{
   constructor(app){
     this.app = app;
-    this.init();
     this.app.on('wsClient:main:ready', this.update.bind(this));
   }
-
 
   /**
   * Creates network interface for this service
   */
-  async init(){
-    try{
-      this.interface = this.app.getInterface('locale')({});
-    }catch(e){
-      notCommon.report(e);
-    }
+  interface(data){
+    return this.app.getInterface('locale')(data);
   }
 
   /**
@@ -32,9 +26,9 @@ class nsLocale{
   */
   async update(){
     try{
-      let dict = await this.interface.$get({locale: this.getCurrentLocale()});
-      if(dict && dict.status === 'ok' && dict.result){
-        notLocale.set(dict.result);
+      let dict = await this.interface({locale: this.getCurrentLocale()}).$get({});
+      if(dict){
+        notLocale.set(dict);
       }
     }catch(e){
       notCommon.report(e);
@@ -52,7 +46,7 @@ class nsLocale{
   * @returns {Promise<Array>}   of locales objects {code, title}
   **/
   getAvailable(){
-    return this.interface.$available({});
+    return this.interface().$available({});
   }
 
 }
