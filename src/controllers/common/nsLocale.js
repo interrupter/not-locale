@@ -11,7 +11,7 @@ class nsLocale{
   constructor(app){
     this.app = app;
     this.init();
-    this.update();
+    this.app.on('wsClient:main:ready', this.update.bind(this));
   }
 
 
@@ -33,8 +33,8 @@ class nsLocale{
   async update(){
     try{
       let dict = await this.interface.$get({locale: this.getCurrentLocale()});
-      if(dict){
-        notLocale.set(dict);
+      if(dict && dict.status === 'ok' && dict.result){
+        notLocale.set(dict.result);
       }
     }catch(e){
       notCommon.report(e);
