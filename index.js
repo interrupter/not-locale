@@ -10,7 +10,6 @@ const {
 module.exports = {
 	name: 'not-locale',
 	paths:{
-		models:  __dirname + '/models',
 		controllers:  __dirname + '/controllers',
     logics:  __dirname + '/logics',
 		routes:  __dirname + '/routes',
