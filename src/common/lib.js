@@ -39,7 +39,7 @@ var store = {},
 	* @return {function} function wich will accept three params (req, res, next) and run as express middleware
 	*/
 
-exports.middleware = (options)=>{
+exports.getMiddleware = (options)=>{
 	if (options){
 		if (options.default && options.default.length > 1){
 			OPTS.default = options.default;

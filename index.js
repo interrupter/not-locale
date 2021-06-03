@@ -1,5 +1,5 @@
 const {
-	middleware,
+	getMiddleware,
 	fromJSON,
 	fromDir,
 	say,
@@ -14,5 +14,5 @@ module.exports = {
     logics:  __dirname + '/src/logics',
 		routes:  __dirname + '/src/routes',
 	},
-	middleware, fromJSON, fromDir, say, vocabulary, OPTS
+	getMiddleware, fromJSON, fromDir, say, vocabulary, OPTS
 };
