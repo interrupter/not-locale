@@ -4,6 +4,7 @@
  */
 
 const loadJsonFile = require('load-json-file'),
+	Log = require('not-log')(module, 'not-locale'),
 	fs = require('fs'),
 	notPath = require('not-path'),
 	path = require('path');
@@ -79,7 +80,6 @@ exports.fromJSON = (locale, json, prefix = '')=>{
   * @return {Promise}
   */
 exports.fromDir = (pathToLocales, prefix = '')=>{
-	console.log(pathToLocales, prefix);
 	return new Promise((resolve, reject)=>{
 		fs.readdir(pathToLocales, (err, items) => {
 			if (err){
@@ -94,7 +94,7 @@ exports.fromDir = (pathToLocales, prefix = '')=>{
 								[localeName] = items[i].split('.');
 							exports.fromJSON(localeName, file, prefix);
 						}catch(e){
-							console.error(e);
+							Log.error(e);
 						}
 					}else{
 						continue;
@@ -117,14 +117,13 @@ exports.say = (phrase, params = {}, locale = OPTS.default) => {
 		let tmpl = store[locale][phrase],
 			result = '';
 		if (params){
-			return notPath.get(tmpl, params, {});
+			return notPath.parseSubs(tmpl, params, {});
 		}else{
 			result = tmpl;
 		}
 		return result;
 	}catch(e){
-		//!TODO replace on not-error/not-error-report
-		//console.error(e);
+		Log.error(e);
 	}
 };
 
