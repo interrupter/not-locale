@@ -57,7 +57,15 @@ exports.getMiddleware = (options)=>{
   * @param {string} locale - name of locale
   * @param {json} json - json object
   */
-exports.fromJSON = (locale, json)=>{
+exports.fromJSON = (locale, json, prefix = '')=>{
+	if(prefix){
+		let tmp = {};
+		const keys = Object.keys(json);
+		keys.forEach((key) => {
+			tmp[`${prefix}:${key}`] = json[key];
+		});
+		json = tmp;
+	}
 	if (typeof store[locale] !== 'undefined'){
 		store[locale] = Object.assign(store[locale], json);
 	}else{
@@ -70,7 +78,8 @@ exports.fromJSON = (locale, json)=>{
   * @param {number} pathToLocales - absolute path to directory
   * @return {Promise}
   */
-exports.fromDir = (pathToLocales)=>{
+exports.fromDir = (pathToLocales, prefix = '')=>{
+	console.log(pathToLocales, prefix);
 	return new Promise((resolve, reject)=>{
 		fs.readdir(pathToLocales, (err, items) => {
 			if (err){
@@ -83,9 +92,9 @@ exports.fromDir = (pathToLocales)=>{
 						try{
 							let file = loadJsonFile.sync(filename),
 								[localeName] = items[i].split('.');
-							exports.fromJSON(localeName, file);
+							exports.fromJSON(localeName, file, prefix);
 						}catch(e){
-							//console.error(e);
+							console.error(e);
 						}
 					}else{
 						continue;

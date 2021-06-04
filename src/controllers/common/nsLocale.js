@@ -3,14 +3,15 @@
 *
 **/
 
-import {notCommon} from 'not-bulma';
-
-import notLocale from './notLocale.js';
+import {notCommon, notLocale} from 'not-bulma';
 
 class nsLocale{
   constructor(app){
     this.app = app;
     this.app.on('wsClient:main:ready', this.update.bind(this));
+    notLocale.on('change', ()=>{
+      this.app.emit('locale');
+    });
   }
 
   /**
@@ -26,9 +27,9 @@ class nsLocale{
   */
   async update(){
     try{
-      let dict = await this.interface({locale: this.getCurrentLocale()}).$get({});
-      if(dict){
-        notLocale.set(dict);
+      let res = await this.interface({locale: this.getCurrentLocale()}).$get({});
+      if(res.status === 'ok' && res.result){
+        notLocale.set(res.result);
       }
     }catch(e){
       notCommon.report(e);

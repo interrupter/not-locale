@@ -1,5 +1,4 @@
 import nsLocale from './nsLocale';
-import notLocale from './notLocale';
 
 const services = { nsLocale };
 const manifest = {
@@ -10,4 +9,4 @@ const manifest = {
   }
 };
 
-export { services, manifest, notLocale };
+export { services, manifest};
