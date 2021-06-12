@@ -11,7 +11,8 @@ class nsLocale{
   constructor(app){
     this.app = app;
     this.locales = [];
-    this.app.on('wsClient:main:ready', this.update.bind(this));
+    this.failures = 0;
+    this.app.on('wsClient:main:connected', this.update.bind(this));
     notLocale.on('change', ()=>{
       this.app.emit('locale');
     });
@@ -34,9 +35,21 @@ class nsLocale{
       let res = await this.interface({locale: this.getCurrentLocale()}).$get({});
       if(res.status === 'ok' && res.result){
         notLocale.set(res.result);
+      }else{
+        this.scheduleUpdate();
       }
     }catch(e){
       notCommon.error(e);
+      this.scheduleUpdate();
+    }
+  }
+
+  scheduleUpdate(){
+    this.failures++;
+    if(this.failures < 100){
+      setTimeout(this.update.bind(this), 1000 * this.failures);
+    }else{
+      notCommon.error('Too many failures of locale loading');
     }
   }
 

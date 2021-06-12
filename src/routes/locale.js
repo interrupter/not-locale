@@ -6,10 +6,7 @@ async function get(req, res){
   try{
     let locale = req.params.locale;
     let result = await notNode.Application.getLogic('Locale').get({locale});
-    res.status(200).json({
-      status: 'ok',
-      result
-    });
+    res.status(200).json(result);
   }catch(err){
     Log.error(err);
     notNode.Application.report(
@@ -31,10 +28,7 @@ async function get(req, res){
 async function available(req, res){
   try{
     let result = await notNode.Application.getLogic('Locale').available();
-    res.status(200).json({
-      status: 'ok',
-      result
-    });
+    res.status(200).json(result);
   }catch(err){
     Log.error(err);
     notNode.Application.report(
