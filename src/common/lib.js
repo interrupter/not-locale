@@ -3,7 +3,7 @@
  * @module not-locale/lib
  */
 
-const loadJsonFile = require('load-json-file'),
+const //loadJsonFile = require('load-json-file'),
 	Log = require('not-log')(module, 'not-locale'),
 	fs = require('fs'),
 	notPath = require('not-path'),
@@ -90,7 +90,7 @@ exports.fromDir = (pathToLocales, prefix = '')=>{
 						stats = fs.lstatSync(filename);
 					if (stats.isFile()){
 						try{
-							let file = loadJsonFile.sync(filename),
+							let file = require(filename),
 								[localeName] = items[i].split('.');
 							exports.fromJSON(localeName, file, prefix);
 						}catch(e){
@@ -112,7 +112,7 @@ exports.fromDir = (pathToLocales, prefix = '')=>{
   * @param {array|object} params - array or hash with params for template parser
   * @return {string} localized variant
   */
-exports.say = (phrase, params = {}, locale = OPTS.default) => {
+function say(phrase, params = {}, locale = OPTS.default){
 	try{
 		let tmpl = store[locale][phrase],
 			result = '';
@@ -126,6 +126,8 @@ exports.say = (phrase, params = {}, locale = OPTS.default) => {
 		Log.error(e);
 	}
 };
+
+exports.say = say
 
 /**
   * Getter for stores of all locales
@@ -151,4 +153,15 @@ exports.get = (locale)=>{
 
 exports.available = ()=>{
 	return Object.keys(store);
+};
+
+
+exports.sayForModule = (moduleName = '') => {
+	return (phrase, params = {}, locale = OPTS.default) => {
+		return say(
+			[moduleName, phrase].join(':'),
+			params,
+			locale
+		);
+	}
 };

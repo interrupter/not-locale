@@ -91,6 +91,15 @@ describe("say", function() {
 	});
 });
 
+
+describe("say for module", function() {
+	it("say login in default(en) locale for not-user module", function() {
+		let say = locale.sayForModule('not-user');
+		expect(typeof say).to.be.equal('function');
+		expect(say('login')).to.be.equal('login for module version');
+	});
+});
+
 describe("middleware", function() {
 	it("pass in express request mockup with Accept-Language: ga ", function() {
 		locale.vocabulary()['ga'] = {
@@ -102,18 +111,18 @@ describe("middleware", function() {
 				return 'ga';
 			}
 		},resMock = {locals:{}};
-		locale.middleware()(reqMock, resMock, ()=>{
+		locale.getMiddleware()(reqMock, resMock, ()=>{
 			expect(resMock.locals.locale).to.be.equal('ga');
 		});
 	});
 
 	it("init middleware with option default: ru", function() {
-		locale.middleware({default: 'ru'});
+		locale.getMiddleware({default: 'ru'});
 		expect(locale.OPTS().default).to.be.equal('ru');
 	});
 
 	it("init middleware with empty options", function() {
-		locale.middleware({});
+		locale.getMiddleware({});
 		expect(locale.OPTS().default).to.be.equal('ru');
 	});
 
@@ -123,13 +132,13 @@ describe("middleware", function() {
 				return 'it';
 			}
 		},resMock = {locals:{}};
-		locale.middleware()(reqMock, resMock, ()=>{
+		locale.getMiddleware()(reqMock, resMock, ()=>{
 			expect(resMock.locals.locale).to.be.equal(locale.OPTS().default);
 		});
 	});
 
 	it("init middleware with custom getter", function() {
-		let middleware = locale.middleware({
+		let middleware = locale.getMiddleware({
 			getter:(req)=>{
 				return req.user.lang;
 			}}),resMock = {locals:{}};

@@ -3,6 +3,7 @@ const {
 	fromJSON,
 	fromDir,
 	say,
+	sayForModule,
 	vocabulary,
 	OPTS
 } = require('./src/common/lib.js');
@@ -14,5 +15,5 @@ module.exports = {
     logics:  __dirname + '/src/logics',
 		routes:  __dirname + '/src/routes',
 	},
-	getMiddleware, fromJSON, fromDir, say, vocabulary, OPTS
+	getMiddleware, fromJSON, fromDir, say, sayForModule, vocabulary, OPTS
 };
