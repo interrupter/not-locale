@@ -156,6 +156,12 @@ exports.available = ()=>{
 };
 
 
+function modulePhrase(moduleName = ''){
+	return (phrase) => [moduleName, phrase].join(':');
+}
+
+exports.modulePhrase = modulePhrase;
+
 exports.sayForModule = (moduleName = '') => {
 	return (phrase, params = {}, locale = OPTS.default) => {
 		return say(

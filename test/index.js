@@ -48,7 +48,7 @@ describe("fromDir", function() {
 
 	});
 
-	it("try to load falty json files", function() {
+	it("try to load faulty json files", function() {
 		locale.fromDir(path.join(__dirname, 'faulty.locales'))
 			.then(()=>{
 				expect().fail();
@@ -99,6 +99,15 @@ describe("say for module", function() {
 		expect(say('login')).to.be.equal('login for module version');
 	});
 });
+
+describe("modulePhrase", function() {
+	it("prefixes phrase with module name", function() {
+		let say = locale.modulePhrase('not-user');
+		expect(typeof say).to.be.equal('function');
+		expect(say('login')).to.be.equal('not-user:login');
+	});
+});
+
 
 describe("middleware", function() {
 	it("pass in express request mockup with Accept-Language: ga ", function() {
