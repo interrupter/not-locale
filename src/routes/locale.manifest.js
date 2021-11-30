@@ -1,4 +1,4 @@
-const Log = require('not-log')(module, 'locale:route');
+const {error} = require('not-log')(module, 'locale:route');
 
 try {
 	module.exports = {
@@ -33,5 +33,5 @@ try {
 		}
 	};
 } catch (e) {
-	Log.error(e);
+	error(e);
 }

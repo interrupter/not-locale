@@ -1,75 +1,81 @@
 /**
-* detects current locale, loads dictionary from server
-*
-**/
+ * detects current locale, loads dictionary from server
+ *
+ **/
 
 const SECTION_ID = 'locale';
 
-import {notCommon, notLocale, TopMenu} from 'not-bulma';
+import {
+  notCommon,
+  notLocale,
+  TopMenu
+} from 'not-bulma';
 
-class nsLocale{
-  constructor(app){
+class nsLocale {
+  constructor(app) {
     this.app = app;
     this.locales = [];
     this.failures = 0;
     this.app.on('wsClient:main:connected', this.update.bind(this));
-    notLocale.on('change', ()=>{
+    notLocale.on('change', () => {
       this.app.emit('locale');
     });
   }
 
   /**
-  * Creates network interface for this service
-  */
-  interface(data){
+   * Creates network interface for this service
+   */
+  interface(data) {
     return this.app.getInterface('locale')(data);
   }
 
   /**
-  * Retrieves dictionary for current locale
-  * sets dictionary in notLocale object
-  */
-  async update(){
-    try{
+   * Retrieves dictionary for current locale
+   * sets dictionary in notLocale object
+   */
+  async update() {
+    try {
       await this.updateAvailable();
-      let res = await this.interface({locale: this.getCurrentLocale()}).$get({});
-      if(res.status === 'ok' && res.result){
+      let res = await this.interface({
+        locale: this.getCurrentLocale()
+      }).$get({});
+      if (res.status === 'ok' && res.result) {
         notLocale.set(res.result);
-      }else{
+      } else {
         this.scheduleUpdate();
       }
-    }catch(e){
+    } catch (e) {
       notCommon.error(e);
       this.scheduleUpdate();
     }
   }
 
-  scheduleUpdate(){
+  scheduleUpdate() {
     this.failures++;
-    if(this.failures < 100){
+    if (this.failures < 100) {
       setTimeout(this.update.bind(this), 1000 * this.failures);
-    }else{
+    } else {
       notCommon.error('Too many failures of locale loading');
     }
   }
 
-  async updateAvailable(){
-    try{
+  async updateAvailable() {
+    try {
       let res = await this.interface({}).$available({});
-      if(res.status === 'ok' && res.result){
+      if (res.status === 'ok' && res.result) {
         this.setAvailable(res.result);
       }
-    }catch(e){
+    } catch (e) {
       notCommon.error(e);
     }
   }
 
-  updateUI(list){
+  updateUI(list) {
     let menuItems = this.createMenuItems(list);
     TopMenu.updateSectionItems(SECTION_ID, () => {
       return menuItems;
     });
-    setTimeout(()=>{
+    setTimeout(() => {
       this.app.emit(`tag-${SECTION_ID}:update`, {
         title: this.getCurrentLocale()
       });
@@ -91,18 +97,18 @@ class nsLocale{
     };
   }
 
-  changeLocale(locale){
+  changeLocale(locale) {
     this.saveLocaleToStore(locale);
     this.update();
   }
 
   /**
-  * @returns {string}   code of current locale
-  **/
-  getCurrentLocale(){
+   * @returns {string}   code of current locale
+   **/
+  getCurrentLocale() {
     let stored = this.restoreLocaleFromStore();
-    if (stored){
-      if(this.locales.includes(stored)){
+    if (stored) {
+      if (this.locales.includes(stored)) {
         return stored;
       }
     }
@@ -110,22 +116,22 @@ class nsLocale{
   }
 
   /**
-  * @returns {Promise<Array>}   of locales objects {code, title}
-  **/
-  getAvailable(){
+   * @returns {Promise<Array>}   of locales objects {code, title}
+   **/
+  getAvailable() {
     return this.interface().$available({});
   }
 
 
-  setAvailable(list){
+  setAvailable(list) {
     this.locales = list;
     this.updateUI(list);
   }
 
-  restoreLocaleFromStore(){
+  restoreLocaleFromStore() {
     if (window.localStorage) {
-    	try {
-    	  return window.localStorage.getItem('locale');
+      try {
+        return window.localStorage.getItem('locale');
       } catch (e) {
         this.app.error(e);
         return false;
@@ -134,10 +140,10 @@ class nsLocale{
     return false;
   }
 
-  saveLocaleToStore(locale){
+  saveLocaleToStore(locale) {
     if (window.localStorage) {
-    	try {
-    	  return window.localStorage.setItem('locale', locale);
+      try {
+        return window.localStorage.setItem('locale', locale);
       } catch (e) {
         this.app.error(e);
         return false;
@@ -146,12 +152,12 @@ class nsLocale{
     return false;
   }
 
-  selectBest(){
-    if(navigator.languages){
+  selectBest() {
+    if (navigator.languages) {
       let locale = navigator.languages.find((itm) => {
         return this.locales.includes(itm);
       });
-      if(locale){
+      if (locale) {
         return locale;
       }
     }

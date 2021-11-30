@@ -11,10 +11,10 @@ async function available(){
 }
 
 module.exports = {
-	servers:{
-		main:{
-			request: {
-				get,
+	servers:{					//collection type
+		main:{					//collection name
+			request: { 		//routes(end-points) type
+				get,				//end-points
 				available
 			}
 		}

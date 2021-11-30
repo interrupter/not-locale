@@ -71,7 +71,7 @@ describe("say", function() {
 	});
 
 	it("phrase not exists `like`", function() {
-		expect(locale.say('like')).to.be.undefined;
+		expect(locale.say('like_me')).to.be.equal('like_me');
 	});
 
 	it("locale not exists, should throw", function() {
