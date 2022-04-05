@@ -1,6 +1,6 @@
 {
 	"name": "not-locale",
-	"version": "0.0.20",
+	"version": "0.0.21",
 	"description": "not-* family module for localization in not- environment",
 	"main": "index.js",
 	"scripts": {
@@ -14,6 +14,7 @@
 		"url": "git+https://github.com/interrupter/not-locale.git"
 	},
 	"keywords": [
+		"not-bulma",
 		"not-node",
 		"locale"
 	],

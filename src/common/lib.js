@@ -9,7 +9,7 @@ const //loadJsonFile = require('load-json-file'),
 	notPath = require('not-path'),
 	path = require('path');
 
-var store = {},
+let store = {},
 	OPTS = {
 		default: 'en',
 		getter: null

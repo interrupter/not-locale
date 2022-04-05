@@ -8,8 +8,10 @@ const SECTION_ID = 'locale';
 import {
   notCommon,
   notLocale,
-  TopMenu
+  Frame
 } from 'not-bulma';
+
+const {notTopMenu} = Frame;
 
 class nsLocale {
   constructor(app) {
@@ -72,7 +74,7 @@ class nsLocale {
 
   updateUI(list) {
     let menuItems = this.createMenuItems(list);
-    TopMenu.updateSectionItems(SECTION_ID, () => {
+    notTopMenu.updateSectionItems(SECTION_ID, () => {
       return menuItems;
     });
     setTimeout(() => {
