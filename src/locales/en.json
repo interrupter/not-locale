@@ -1,0 +1,4 @@
+{
+    "exception_logic_available": "Exception while listing available locales",
+    "exception_logic_get": "Exception while retrieving locale library"
+}

@@ -1,22 +1,25 @@
-const notNode = require('not-node');
+const notNode = require("not-node");
 
-async function get({data}){
-	let result = await notNode.Application.getLogic('Locale').get({locale: data.locale});
-	return result;
+async function get({ data }) {
+    return await notNode.Application.getLogic("Locale").get({
+        locale: data.locale,
+    });
 }
 
-async function available(){
-	let result = await notNode.Application.getLogic('Locale').available();
-	return result;
+async function available() {
+    return await notNode.Application.getLogic("Locale").available();
 }
 
 module.exports = {
-	servers:{					//collection type
-		main:{					//collection name
-			request: { 		//routes(end-points) type
-				get,				//end-points
-				available
-			}
-		}
-	}
+    servers: {
+        //collection type
+        main: {
+            //collection name
+            request: {
+                //routes(end-points) type
+                get, //end-points
+                available,
+            },
+        },
+    },
 };
