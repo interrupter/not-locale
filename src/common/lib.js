@@ -4,34 +4,34 @@
  */
 
 const //loadJsonFile = require('load-json-file'),
-	Log = require('not-log')(module, 'not-locale'),
-	fs = require('fs'),
-	notPath = require('not-path'),
-	path = require('path');
+    Log = require("not-log")(module, "not-locale"),
+    fs = require("fs"),
+    notPath = require("not-path"),
+    path = require("path");
 
 let store = {},
-	OPTS = {
-		default: 'en',
-		getter: null
-	};
+    OPTS = {
+        default: "en",
+        getter: null,
+    };
 
 /**
  * Express middleware, to determine in which locale should we process response
  */
 
 function detect(req, res, next) {
-	let reqLang;
-	if (OPTS.getter) {
-		reqLang = OPTS.getter(req);
-	} else {
-		reqLang = req.get('Accept-Language');
-	}
-	if (Object.prototype.hasOwnProperty.call(store, reqLang)) {
-		res.locals.locale = reqLang;
-	} else {
-		res.locals.locale = OPTS.default;
-	}
-	next();
+    let reqLang;
+    if (OPTS.getter) {
+        reqLang = OPTS.getter(req);
+    } else {
+        reqLang = req.get("Accept-Language");
+    }
+    if (Object.prototype.hasOwnProperty.call(store, reqLang)) {
+        res.locals.locale = reqLang;
+    } else {
+        res.locals.locale = OPTS.default;
+    }
+    next();
 }
 
 /**
@@ -41,37 +41,36 @@ function detect(req, res, next) {
  */
 
 exports.getMiddleware = (options) => {
-	if (options) {
-		if (options.default && options.default.length > 1) {
-			OPTS.default = options.default;
-		}
-		if (options.getter && typeof options.getter === 'function') {
-			OPTS.getter = options.getter;
-		}
-	}
-	return detect;
+    if (options) {
+        if (options.default && options.default.length > 1) {
+            OPTS.default = options.default;
+        }
+        if (options.getter && typeof options.getter === "function") {
+            OPTS.getter = options.getter;
+        }
+    }
+    return detect;
 };
-
 
 /**
  * Add locale by json object
  * @param {string} locale - name of locale
  * @param {json} json - json object
  */
-exports.fromJSON = (locale, json, prefix = '') => {
-	if (prefix) {
-		let tmp = {};
-		const keys = Object.keys(json);
-		keys.forEach((key) => {
-			tmp[`${prefix}:${key}`] = json[key];
-		});
-		json = tmp;
-	}
-	if (typeof store[locale] !== 'undefined') {
-		store[locale] = Object.assign(store[locale], json);
-	} else {
-		store[locale] = Object.assign({}, json);
-	}
+exports.fromJSON = (locale, json, prefix = "") => {
+    if (prefix) {
+        let tmp = {};
+        const keys = Object.keys(json);
+        keys.forEach((key) => {
+            tmp[`${prefix}:${key}`] = json[key];
+        });
+        json = tmp;
+    }
+    if (typeof store[locale] !== "undefined") {
+        store[locale] = Object.assign(store[locale], json);
+    } else {
+        store[locale] = Object.assign({}, json);
+    }
 };
 
 /**
@@ -79,31 +78,31 @@ exports.fromJSON = (locale, json, prefix = '') => {
  * @param {number} pathToLocales - absolute path to directory
  * @return {Promise}
  */
-exports.fromDir = (pathToLocales, prefix = '') => {
-	return new Promise((resolve, reject) => {
-		fs.readdir(pathToLocales, (err, items) => {
-			if (err) {
-				reject(err);
-			} else {
-				for (let i = 0; i < items.length; i++) {
-					let filename = path.join(pathToLocales, items[i]),
-						stats = fs.lstatSync(filename);
-					if (stats.isFile()) {
-						try {
-							let file = require(filename),
-								[localeName] = items[i].split('.');
-							exports.fromJSON(localeName, file, prefix);
-						} catch (e) {
-							Log.error(e);
-						}
-					} else {
-						continue;
-					}
-				}
-				resolve();
-			}
-		});
-	});
+exports.fromDir = (pathToLocales, prefix = "") => {
+    return new Promise((resolve, reject) => {
+        fs.readdir(pathToLocales, (err, items) => {
+            if (err) {
+                reject(err);
+            } else {
+                for (let i = 0; i < items.length; i++) {
+                    let filename = path.join(pathToLocales, items[i]),
+                        stats = fs.lstatSync(filename);
+                    if (stats.isFile()) {
+                        try {
+                            let file = require(filename),
+                                [localeName] = items[i].split(".");
+                            exports.fromJSON(localeName, file, prefix);
+                        } catch (e) {
+                            Log.error(e);
+                        }
+                    } else {
+                        continue;
+                    }
+                }
+                resolve();
+            }
+        });
+    });
 };
 
 /**
@@ -113,21 +112,21 @@ exports.fromDir = (pathToLocales, prefix = '') => {
  * @return {string} localized variant
  */
 function say(phrase, params = {}, locale = OPTS.default) {
-	try {
-		let tmpl = store[locale][phrase],
-			result = '';
-		if (typeof tmpl === 'undefined') {
-			return phrase;
-		}
-		if (params) {
-			return notPath.parseSubs(tmpl, params, {});
-		} else {
-			result = tmpl;
-		}
-		return result;
-	} catch (e) {
-		Log.error(e);
-	}
+    try {
+        let tmpl = store[locale] ? store[locale][phrase] : undefined,
+            result = "";
+        if (typeof tmpl === "undefined") {
+            return phrase;
+        }
+        if (params) {
+            return notPath.parseSubs(tmpl, params, {});
+        } else {
+            result = tmpl;
+        }
+        return result;
+    } catch (e) {
+        Log.error(e);
+    }
 }
 
 exports.say = say;
@@ -137,7 +136,7 @@ exports.say = say;
  * @return {objects} all locales
  */
 exports.vocabulary = () => {
-	return store;
+    return store;
 };
 
 /**
@@ -145,36 +144,29 @@ exports.vocabulary = () => {
  * @return {object} copy of OPTS object
  */
 exports.OPTS = () => {
-	return Object.assign({}, OPTS);
+    return Object.assign({}, OPTS);
 };
-
 
 exports.get = (locale) => {
-	if (Object.prototype.hasOwnProperty.call(store, locale)) {
-		return store[locale];
-	} else {
-		return {};
-	}
+    if (Object.prototype.hasOwnProperty.call(store, locale)) {
+        return store[locale];
+    } else {
+        return {};
+    }
 };
-
 
 exports.available = () => {
-	return Object.keys(store);
+    return Object.keys(store);
 };
 
-
-function modulePhrase(moduleName = '') {
-	return (phrase) => [moduleName, phrase].join(':');
+function modulePhrase(moduleName = "") {
+    return (phrase) => [moduleName, phrase].join(":");
 }
 
 exports.modulePhrase = modulePhrase;
 
-exports.sayForModule = (moduleName = '') => {
-	return (phrase, params = {}, locale = OPTS.default) => {
-		return say(
-			[moduleName, phrase].join(':'),
-			params,
-			locale
-		);
-	};
+exports.sayForModule = (moduleName = "") => {
+    return (phrase, params = {}, locale = OPTS.default) => {
+        return say([moduleName, phrase].join(":"), params, locale);
+    };
 };
