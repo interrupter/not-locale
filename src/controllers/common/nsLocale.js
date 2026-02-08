@@ -90,7 +90,7 @@ class nsLocale {
             id: `${SECTION_ID}.${item}`,
             section: SECTION_ID,
             title: item,
-            classes: " is-clickable ",
+            class: " is-clickable ",
             action: this.changeLocale.bind(this, item),
         };
     }

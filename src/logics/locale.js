@@ -3,6 +3,7 @@ const {
     LocaleExceptionGetError,
     LocaleExceptionAvailableError,
 } = require("../exceptions");
+
 const MODEL_NAME = "Locale";
 exports.thisLogicName = MODEL_NAME;
 

@@ -12,7 +12,7 @@ const manifest = {
       sections:[
 				{
 					id: 'locale',
-          title: '',
+          			title: '',
 					icon: {
 						font: 'language',
 						size: 'medium',
