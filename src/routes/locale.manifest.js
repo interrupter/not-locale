@@ -15,9 +15,13 @@ try {
                 rules: [
                     {
                         auth: true,
+                        returnRoot: "result",
+                        return: ["@*"],
                     },
                     {
                         auth: false,
+                        returnRoot: "result",
+                        return: ["@*"],
                     },
                 ],
             },
@@ -30,9 +34,13 @@ try {
                 rules: [
                     {
                         auth: true,
+                        returnRoot: "result",
+                        return: ["@*"],
                     },
                     {
                         auth: false,
+                        returnRoot: "result",
+                        return: ["@*"],
                     },
                 ],
             },

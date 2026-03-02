@@ -15,6 +15,7 @@ class nsLocale {
         this.locales = [];
         this.failures = 0;
         this.app.on("wsClient:main:connected", this.update.bind(this));
+        this.app.once("wsClient:main:disconnected", this.update.bind(this));
         notLocale.on("change", () => {
             this.app.emit("locale");
         });
