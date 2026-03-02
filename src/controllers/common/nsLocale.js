@@ -150,17 +150,18 @@ class nsLocale {
     }
 
     selectBest() {
+        let defaultLocale = "ru";
         if (navigator.languages) {
-            let locale = navigator.languages.find((itm) => {
+            const navigatorLocale = navigator.languages.find((itm) => {
                 return this.locales.includes(itm);
             });
-            if (locale) {
-                return locale;
+            if (navigatorLocale) {
+                defaultLocale = navigatorLocale;
             }
         }
         return this.app.getWorking(
             "locale",
-            this.app.getOptions("modules.locale.default", "ru")
+            this.app.getOptions("modules.locale.default", defaultLocale)
         );
     }
 }
