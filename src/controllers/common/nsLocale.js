@@ -151,19 +151,24 @@ class nsLocale {
     }
 
     selectBest() {
-        let defaultLocale = "ru";
-        if (navigator.languages) {
-            const navigatorLocale = navigator.languages.find((itm) => {
-                return this.locales.includes(itm);
-            });
-            if (navigatorLocale) {
-                defaultLocale = navigatorLocale;
+        const onlyOneEnabled = this.app.getOptions("modules.locale.only");
+        if (onlyOneEnabled) {
+            return this.app.getWorking("locale", onlyOneEnabled);
+        } else {
+            let defaultLocale = "ru";
+            if (navigator.languages) {
+                const navigatorLocale = navigator.languages.find((itm) => {
+                    return this.locales.includes(itm);
+                });
+                if (navigatorLocale) {
+                    defaultLocale = navigatorLocale;
+                }
             }
+            return this.app.getWorking(
+                "locale",
+                this.app.getOptions("modules.locale.default", defaultLocale)
+            );
         }
-        return this.app.getWorking(
-            "locale",
-            this.app.getOptions("modules.locale.default", defaultLocale)
-        );
     }
 }
 
